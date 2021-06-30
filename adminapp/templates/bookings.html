@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block main  %}
+<h4 class="p-2">Bookings</h4>
+{% if messages %}                
+    <div class="alert text-success font-weight-bold text-center">    
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}                    
+    </div>
+{% endif %}
+<div class="container-fluid">       
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Booking Id</th>
+                    <th>Car Variant</th>
+                    <th>Booking Date</th>
+                    <th>Pickup Location</th>
+                    <th>User Name</th>
+                    <th>Advance</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Status</th>
+                    <th>Cancel</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bk in page_obj %}
+                <tr>
+                    <td>{{bk.bid}}</td>
+                    <td>{{bk.variant.title}}</td>
+                    <td>{{bk.bookingdate}}</td>
+                    <td>{{bk.pickuplocation}}</td>
+                    <td>{{bk.customer.uname}}</td>
+                    <td>&#8377; {{bk.advance}}</td>
+                    <td>{{bk.fromdate}}</td>
+                    <td>{{bk.todate}}</td>
+                    <td>{{bk.status}}</td>
+                    <td><a href="/bdetails/{{bk.bid}}" class="btn btn-primary btn-sm">Details</a>                                       
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+               {% for no in totalpages %}
+                <li class="page-item {% if page_number == no %} active {% endif %}">
+                    <a class="page-link" href="?page={{no}}">{{no}}</a>
+                </li>
+                {% endfor %}    
+            </ul>
+          </nav>
+        
+    </div>
+</div>
+{% endblock %}

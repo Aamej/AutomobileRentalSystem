@@ -1,0 +1,59 @@
+{% extends 'ncbase.html' %}
+{% block 'main' %}       
+    <div class="container-fluid"> 
+        <div class="card shadow mt-2">
+            <div class="card-body">
+                <h5 class="p-2" style="border-bottom: 2px solid green;">My Bookings</h5>
+                {% if messages %}                
+                <div class="alert text-success font-weight-bold text-center">    
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}                    
+                </div>
+                {% endif %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Booking Id</th>
+                                <th>Car Name</th>
+                                <th>Posted Date</th>
+                                <th>Price</th>
+                                <th>From Date</th>
+                                <th>To Date</th>
+                                <th>Pickup Location</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bk in bks %}
+                            <tr>
+                                <td>{{bk.bid}}</td>
+                                <td>{{bk.variant.title}}</td>
+                                <td>{{bk.bookingdate}}</td>
+                                <td>&#8377; {{bk.variant.price}}/day</td>
+                                <td>{{bk.fromdate}}</td>
+                                <td>{{bk.todate}}</td>
+                                <td>{{bk.pickuplocation}}</td>
+                                <td>{{bk.status}}</td>
+                                <td>
+                                    {% if bk.status != 'Confirmed' %}
+                                    <a onclick="return confirm('Are you sure to cancel this booking')" href="/cancel/{{bk.bid}}" class="btn btn-outline-danger btn-sm">Cancel</a>
+                                    {% else %}
+                                    <a href="/bkdetails/{{bk.bid}}" class="btn btn-outline-primary btn-sm">Details</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>      
+        
+            
+        </div> 
+
+<!-- //services -->
+</div>
+<script src="js/bootstrap.js"></script>        
+{% endblock %}

@@ -1,0 +1,259 @@
+{% extends 'ncbase.html' %}
+{% block 'main'  %}
+<style>
+ul.timeline {
+    list-style-type: none;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+ /* Timeline vertical line */
+ul.timeline:before {
+    content: ' ';
+    background: #fff;
+    display: inline-block;
+    position: absolute;
+    left: 16px;
+    width: 4px;
+    height: 100%;
+    z-index: 400;
+    border-radius: 1rem;
+}
+
+li.timeline-item {
+    margin: 20px 0;
+}
+
+/* Timeline item arrow */
+.timeline-arrow {
+    border-top: 0.5rem solid transparent;
+    border-right: 0.5rem solid rgb(250, 220, 49);
+    border-bottom: 0.5rem solid transparent;
+    display: block;
+    position: absolute;
+    left: 2rem;
+}
+
+/* Timeline item circle marker */
+li.timeline-item::before {
+    content: ' ';
+    background: rgb(250, 220, 49);
+    display: inline-block;
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid rgb(56, 182, 17);
+    left: 11px;
+    width: 14px;
+    height: 14px;
+    z-index: 400;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center
+}
+
+.rating>input {
+    display: none
+}
+
+.rating>label {
+    position: relative;
+    width: 1em;
+    font-size: 35px;
+    color: #3a25f7;
+    cursor: pointer
+}
+
+.rating>label::before {
+    content: "\2605";
+    position: absolute;
+    opacity: 0
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+    opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+    opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+    opacity: 0.4
+}
+</style>
+<div class="container-fluid">
+    <div class="form-row">
+        <div class="col-sm-6">
+            <div class="card shadow">
+                
+                <div class="card-body">
+                    <img src="{{bk.variant.photo.url}}" style="width:calc(100% - 300px)" class="img-thumbnail float-left">
+                    <img src="{{bk.driver.photo.url}}" style="width:300px" class="img-thumbnail float-right">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>{{bk.bid}}</th>
+                            <th>Driver Name</th>
+                            <th>{{bk.driver.dname}}</th>
+                            
+                        </tr>
+                        <tr>
+                            <th>Car No</th>
+                            <th>{{bk.car.carno}}</th>
+                            <th>Car Reading</th>
+                            <th>{{bk.car.reading}} Km</th>
+                            
+                        </tr>
+                        <tr>
+                            <th>From Date</th>
+                            <th>{{bk.fromdate}}</th>
+                            <th>Driver Experience</th>
+                            <th>{{bk.driver.exp}}</th>
+                        </tr>
+                        <tr>
+                            <th>To Date</th>
+                            <th>{{bk.todate}}</th>
+                            <th>Driving License No</th>
+                            <th>{{bk.driver.licno}}</th>
+                        </tr>
+                        <tr>
+                            <th>Car Variant</th>
+                            <th>{{bk.variant.title}}</th>
+                            <th>Driver Gender</th>
+                            <th>{{bk.driver.gender}}</th>
+                        </tr>
+                        <tr>
+                            <th>Price per Day</th>
+                            <th>&#8377; {{bk.variant.price}} / day</th>
+                            <th>Driver Contact No</th>
+                            <th>{{bk.driver.phone}}</th>
+                        </tr>
+                        <tr>
+                            <th>Bill Amount</th>
+                            <th>&#8377; {{bk.billamount}}</th>
+                            <th>Advance Paid </th>
+                            <th>&#8377; {{bk.advance}}</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-sm-6">
+            <div class="card shadow">
+                <div class="card-body">                                                           
+                    <div class="form-row">
+                        <div class="col-sm-6 p-2">
+                            <h5 class="card-title">Journey Timeline</h5>
+                            <!-- Timeline -->
+                            <ul class="timeline">
+                                {% for js in stages %}
+                                <li class="timeline-item bg-white rounded ml-3 px-3 py-2 shadow border border-warning">
+                                    <div class="timeline-arrow"></div>
+                                    <h2 class="h5 mb-0">{{js.stage}}</h2><span class="small text-gray"><i class="fa fa-clock-o mr-1"></i>{{js.stagetime}}</span>
+                                    <p class="text-small mt-2 mb-0 font-weight-light">{{js.remarks}}</p>
+                                </li>
+                                {% endfor %}                                
+                            </ul>
+                            <!-- End -->
+                        </div>
+                        <div class="col-sm-6">
+                            {% if closed and not complete %}
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <h5 class="text-center">Final Payment and Feedback</h5> 
+                                    <form method="POST" action="/savepymt/">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="bid" value="{{bk.bid}}">
+                                        <div class="form-group">
+                                            <label>Car Reading *</label>
+                                            <input type="number" name="reading" min="{{bk.car.reading}}" class="form-control form-control-sm">                                             
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Balance Amount *</label>
+                                            <input type="text" name="balance" readonly value="{{bal}}" class="form-control form-control-sm">                                             
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Card No *</label>
+                                            <input type="text" name="cardno" maxlength="16" class="form-control form-control-sm">                                             
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Name on card *</label>
+                                            <input type="text" name="nameoncard" class="form-control form-control-sm">                                             
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Feedback *</label>
+                                            <textarea rows="4" placeholder="Feedback" name="feedback" class="form-control form-control-sm"></textarea> 
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Rating </label>
+                                            <div class="rating"> 
+                                                <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label> 
+                                                <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label> 
+                                                <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label> 
+                                                <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label> 
+                                                <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                                            </div>
+                                        </div>
+                                        <input type="submit" value="Make Payment" class="btn btn-success btn-sm float-right">
+                                    </form>
+                                </div>
+                            </div>
+                            {% elif closed and complete %}
+                            <div class="card shadow" style="min-height: 100%;">
+                                <div class="card-body p-2">
+                                    <h5 class="text-center p-2" style="border-bottom: 2px solid green;">Payment History</h5>
+                                    {% for pmt in phistory %}
+                                    <div class="card shadow p-2 mb-2">
+                                        <p class="p-1 m-0">Date : {{pmt.pymtdate}}</p>
+                                        <p class="m-0">Amount : &#8377; {{pmt.amount}}</p>
+                                        <p class="m-0 font-weight-bold">{{pmt.remarks}}</p>
+                                    </div>  
+                                    {% endfor %}                                   
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <h5 class="text-center">Journey Status</h5> 
+                                    <form method="POST" action="/savestage/">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="bid" value="{{bk.bid}}">
+                                        <div class="form-group">                                            
+                                            <input list="stages" type="text" name="stage" placeholder="Journey Stage" class="form-control form-control-sm"> 
+                                            <datalist id="stages">
+                                                <option>Car Arrive</option>
+                                                <option>Journey Started</option>
+                                                <option>Destination Reached</option>
+                                                <option>Journey Complete</option>                                        
+                                            </datalist>
+                                        </div>
+                                        <div class="form-group">                                            
+                                            <textarea rows="4" placeholder="Remarks" name="remarks" class="form-control form-control-sm"></textarea> 
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" id="status" name="status" value="complete" class="form-check-inline">
+                                            <label for="status">Journey Complete</label>
+                                        </div>
+                                        <input type="submit" value="Save Stage" class="btn btn-primary btn-sm float-right">
+                                    </form>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

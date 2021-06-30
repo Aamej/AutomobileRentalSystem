@@ -1,0 +1,12 @@
+<div class="navbar-nav">
+    <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+    <a class="nav-item nav-link" href="/products">Cars</a>
+    {% if 'userid' in request.session %}    
+    <a class="nav-item nav-link" href="/mybookings">My Bookings</a>
+    <a class="nav-item nav-link" href="/logout">Logout</a>
+    <a class="nav-item nav-link" href="#">Hi! {{request.session.uname}}</a>
+    {% else %}
+    <a class="nav-item nav-link" href="/login">Login</a>
+    <a class="nav-item nav-link" href="/register">Register</a>
+    {% endif %}
+  </div>

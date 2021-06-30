@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block main  %}
+<h4 class="p-2" style="border-bottom: 2px solid green;">Customers</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Password</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{user.userid}}</td>
+                <td>{{user.uname}}</td>
+                <td>{{user.gender}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.address}}</td>
+                <td>{{user.pwd}}</td>
+            </tr>
+        {%endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends 'ncbase.html' %}
+{% load static %}
+{% block 'main' %}
+<div class="container-fluid">               
+        <div class="row">
+            <div class="col-sm-6">                 
+                <div class="card m-2">
+                    <div class="card-header text-center">
+                        {{car.brand.bname}} {{car.title}}
+                    </div>                    
+                    <img style="height:380px;" src="{{car.photo.url}}" class="card-top-img">
+                    <div class="card-footer">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Car Title</th>
+                                    <th>{{car.brand.bname}} {{car.title}}</th>
+                                    <th>Fuel Type</th>
+                                    <th>{{car.fueltype}}</th>
+                                </tr>
+                                <tr>
+                                    <th>Model Year</th>
+                                    <th>{{car.modelyear}} model</th>
+                                    <th>Price per day</th>
+                                    <th>&#8377; {{car.price}}/day</th>
+                                </tr>
+                                <tr>
+                                    <th>Seats/Capacity</th>
+                                    <th>{{car.capacity}} seats</th>
+                                    {% if discount %}
+                                    <th class="text-danger">Discount Available</th>
+                                    <th class="text-success">&#8377; {{discount}}</th>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th colspan="4">Features</th>
+                                </tr>
+                                <tr>
+                                    <th>Air Condition</th>
+                                    <th>{{car.ac}}</th>
+                                    <th>Air Bags</th>
+                                    <th>{{car.airbag}}</th>
+                                </tr>
+                                <tr>
+                                    <th>Power Door Lock</th>
+                                    <th>{{car.powerdoorlock}}</th>
+                                    <th>Power Steering</th>
+                                    <th>{{car.powersteering}}</th>
+                                </tr>
+                                <tr>
+                                    <th>Power Windows</th>
+                                    <th>{{car.powerwindows}}</th>
+                                    <th>Central Lock</th>
+                                    <th>{{car.centrallock}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>                
+            </div>
+            <div class="col-sm-6">
+                {% if 'userid' in request.session %}                    
+                    <h4 class="p-2" style="border-bottom: 2px solid green;">Book Now</h4>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="cid" value="{{car.cid}}">
+                        <div class="card shadow mb-2">
+                            <div class="card-body">
+                                <h5 style="border-bottom: 2px solid green;">Booking Details</h5>
+                        <div class="form-row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>From Date</label>
+                                    <input type="date" id="fromdate" name="fromdate" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>To Date</label>
+                                    <input type="date" id="todate" name="todate" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Pickup Location</label>
+                                    <input type="text" required name="pickuplocation" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Message (Optional)</label>
+                                    <input type="text" required name="message" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input type="hidden" id="price" value="{{car.price}}">
+                                    <input type="text" required id="totalprice" readonly name="billamount" value="{{car.price}}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Booking Money</label>
+                                    <input type="text" required name="advance" placeholder="Advance Amount" value="{{car.advance}}" class="form-control">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                            <div class="card shadow mb-2">
+                                <div class="card-body">
+                                    <h5 style="border-bottom: 2px solid green;">Payment Details</h5>
+                                    <div class="form-row">                                
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Card Number</label>
+                                                <input type="text" required name="cardno" pattern="[0-9]{16,16}" maxlength="16" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Name on Card</label>
+                                                <input type="text" required name="nameoncard" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>CVV</label>
+                                                <input type="text" required maxlength="3" pattern="[0-9]{3,3}" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Expiry Date</label>
+                                                <input type="month" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                    
+                        
+                        <input type="submit" value="Book Now" class="btn btn-primary">
+                    </form>
+                    {% if messages %}                
+                    <div class="alert alert-success text-center">    
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}                    
+                    </div>
+                    {% endif %}
+                    
+                {% else %}  
+                    <h5 class="p-2 mt-4">Please <a href="/login">login</a> or <a href="/register">register</a> to book car</h5>
+                {% endif %}
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+<script src="{% static 'js/jquery-3.4.1.js' %}"></script>    
+<script src="{% static 'js/bootstrap.js' %}"></script>    
+<script>    
+    document.querySelector("#todate").valueAsDate=new Date();
+    document.querySelector("#fromdate").valueAsDate=new Date();
+    $(function(){
+        $("#todate").change(function(){
+            let to=new Date($(this).val());
+            let from=new Date($("#fromdate").val());            
+            let days=to.getDate()-from.getDate()+1;
+            console.log();
+            if(days>0){
+                let price=$("#price").val();
+                $("#totalprice").val(price*days);
+            }else{
+                $("#totalprice").val("Invalid date");
+            }
+        });
+    });
+</script>            
+{% endblock %}

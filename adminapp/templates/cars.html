@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block main  %}
+<div class="row">
+    <div class="col-sm-8">
+        <h4 class="p-2 float-left">Cars</h4>        
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+               {% for i in paginator.page_range %}
+                <li class="page-item {% if i == page_obj.number %} active {% endif %}">
+                    <a class="page-link" href="?page={{i}}">{{i}}</a>
+                </li>
+                {% endfor %}    
+            </ul>
+        </nav>
+        
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>Car No</th>
+                    <th>Model Year</th> 
+                    <th>Variant</th>
+                    <th>Reading</th>
+                    <th>Status</th>
+                    <th>Action</th>           
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in page_obj %}
+                    <tr>
+                        <td>{{b.carno}}</td>
+                        <td>{{b.modelyear}}</td> 
+                        <td>{{b.carv.title}}</td> 
+                        <td>{{b.reading}} km</td> 
+                        <td>{{b.status}}</td> 
+                        <td>
+                            <a onclick="return confirm('Are you sure to delete this brand ?')" href="/delcar/{{b.carno}}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i>Delete</a>
+                            <a href="/cars/{{b.carno}}" class="btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                        </td>               
+                    </tr>
+                {%endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <div class="col-sm-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Select Variant</label>
+                <select required class="form-control" name="vid">
+                    <option value="">-- Select Variant --</option>
+                    {% for var in variants %}
+                    <option value="{{var.cid}}">{{var.title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Car No</label>
+                <input type="text" required class="form-control" value="{{car.carno}}" name="carno">
+            </div>
+            <div class="form-group">
+                <label>Model Year</label>
+                <input type="text" required class="form-control" value="{{car.modelyear}}" name="modelyear">
+            </div>
+            <div class="form-group">
+                <label>Reading (in km)</label>
+                <input type="text" required class="form-control" value="{{car.reading}}" name="reading">
+            </div>
+            
+            <input type="submit" class="btn btn-primary btn-sm" value="Save Car">
+        </form>
+        {% if messages %}                
+            <div class="alert text-success font-weight-bold text-center">    
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}                    
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

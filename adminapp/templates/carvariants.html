@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block main  %}
+<style>
+    a.btn-primary{
+        color:white !important;
+    }
+</style>
+<a href="/addcar" class="btn btn-primary btn-sm float-right">Add Car Variant</a>
+<h5 class="p-2" style="border-bottom: 2px solid green;">Available Car Variants</h5>
+{% if messages %}                
+    <div class="alert text-success font-weight-bold text-center">    
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}                    
+    </div>
+{% endif %}
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>Car ID</th>
+            <th>Car Name</th>            
+            <th>Category</th>            
+            <th>Rental</th>                       
+            <th>Capacity</th>            
+            <th>Fuel Type</th>             
+            <th>Action</th>           
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in page_obj %}
+            <tr>
+                <td>{{c.cid}}</td>
+                <td><img src="{{c.photo.url}}" style='width:80px;'> {{c.title}}</td>                
+                <td>{{c.category.catname}}</td>                
+                <td>{{c.price}}</td>                               
+                <td>{{c.capacity}}</td>                
+                <td>{{c.fueltype}}</td> 
+                <td><a href="/editcar/{{c.cid}}" class="btn btn-success btn-sm">Edit Details</a></td>               
+            </tr>
+        {%endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+       {% for i in paginator.page_range %}
+        <li class="page-item {% if i == page_obj.number %} active {% endif %}">
+            <a class="page-link" href="?page={{i}}">{{i}}</a>
+        </li>
+        {% endfor %}    
+    </ul>
+</nav>
+{% endblock %}

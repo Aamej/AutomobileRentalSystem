@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block main  %}
+<style>
+    .checked {
+  color: orange;
+}
+</style>
+<h4 class="p-2" style="border-bottom: 2px solid green;">Feedbacks</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer Name</th>
+            <th>Feedback</th>
+            <th>Ratings</th>      
+            <th>Date</th>      
+        </tr>
+    </thead>
+    <tbody>
+        {% for f in fb %}
+            <tr>
+                <td>{{f.id}}</td>
+                <td>{{f.customer.uname}}</td>                
+                <td>{{f.feedback}}</td>               
+                <td>
+                    {% for i in '12345'|make_list %}                    
+                    {% if forloop.counter <= f.ratings %}
+                    <span class="fa fa-star checked"></span>
+                    {% else %}
+                    <span class="fa fa-star"></span>
+                    {% endif %}
+                    {% endfor %}                   
+                </td>       
+                <td>{{f.createdon}}</td>        
+            </tr>
+        {%endfor %}
+    </tbody>
+</table>
+{% endblock %}

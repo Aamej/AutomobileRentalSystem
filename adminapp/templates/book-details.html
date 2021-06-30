@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block main  %}
+<h4 class="p-2" style="border-bottom: 2px solid green;">Bookings</h4>
+<div class="container-fluid">
+    <div class="form-row">
+        <div class="col-sm-6">
+            <div class="card shadow">
+                <img src="{{bk.variant.photo.url}}" class="card-top-img">
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>{{bk.bid}}</th>
+                            <th>Customer Name</th>
+                            <th>{{bk.customer.uname}}</th>
+                        </tr>
+                        <tr>
+                            <th>From Date</th>
+                            <th>{{bk.fromdate}}</th>
+                            <th>To Date</th>
+                            <th>{{bk.todate}}</th>
+                        </tr>
+                        <tr>
+                            <th>Car Variant</th>
+                            <th>{{bk.variant.title}}</th>
+                            <th>Price per Day</th>
+                            <th>{{bk.variant.price}}</th>
+                        </tr>                        
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-sm-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="text-center">Booking Confirmation</h5>
+                    {% if bk.status != 'Confirmed' %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Select Car *</label>
+                                    <select required class="form-control form-control-sm" name="cid">
+                                        <option value="">-- Select Car --</option>
+                                        {% for c in cars %}
+                                        <option value="{{c.carno}}">{{c.carno}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Select Driver *</label>
+                                    <select required class="form-control form-control-sm" name="driver">
+                                        <option value="">-- Select Driver --</option>
+                                        {% for d in drivers %}
+                                        <option value="{{d.id}}">{{d.dname}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="submit" value="Confirm Booking" class="btn btn-outline-success btn-sm float-right">
+                        <a onclick="return confirm('Are you sure to cancel this booking ?')" href="/admincancel/{{bk.bid}}" class="btn btn-outline-danger btn-sm float-left">Cancel Booking</a>
+                    </form>
+                    {% else %}
+                    <h4 class="text-success text-center p-2">Booking confirmed</h4>
+                    <div class="form-row">
+                        <div class="col-sm-4">
+                            <img src="{{bk.driver.photo.url}}" class="img-thumbnail">
+                            <h5>Driver: {{bk.driver.dname}}</h5>
+                        </div>
+                        <div class="col-sm-8 p-3">
+                            <h5>Car No : {{bk.car.carno}}</h5>
+                            <h5>Meter Reading : {{bk.car.reading}}KM</h5>
+                            <h5>Driver Experience : {{bk.driver.exp}} years</h5>
+                            <h5>Driver License : {{bk.driver.licno}}</h5>
+                        </div>
+                    </div>
+                    <div class="card shadow" style="min-height: 100%;">
+                        <div class="card-body p-2">
+                            <h5 class="text-center p-2" style="border-bottom: 2px solid green;">Payment History</h5>
+                            {% for pmt in phistory %}
+                            <div class="card shadow p-2 mb-2">
+                                <p class="p-1 m-0">Date : {{pmt.pymtdate}}</p>
+                                <p class="m-0">Amount : &#8377; {{pmt.amount}}</p>
+                                <p class="m-0 font-weight-bold">{{pmt.remarks}}</p>
+                            </div>  
+                            {% endfor %}                                   
+                        </div>
+                    </div>
+                    
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

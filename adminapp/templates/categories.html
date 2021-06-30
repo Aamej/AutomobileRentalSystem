@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block main  %}
+<div class="row">
+    <div class="col-sm-8">
+        <h4 class="p-2 float-left">Categories</h4>        
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+               {% for i in paginator.page_range %}
+                <li class="page-item {% if i == page_obj.number %} active {% endif %}">
+                    <a class="page-link" href="?page={{i}}">{{i}}</a>
+                </li>
+                {% endfor %}    
+            </ul>
+        </nav>
+        
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th> 
+                    <th>Description</th>
+                    <th>Photo</th>
+                    <th>Action</th>           
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in page_obj %}
+                    <tr>
+                        <td>{{b.id}}</td>
+                        <td>{{b.catname}}</td> 
+                        <td>{{b.description}}</td> 
+                        <td><img src='{{b.photo.url}}' style='width:80px'></td> 
+                        <td>
+                            <a onclick="return confirm('Are you sure to delete this brand ?')" href="/delcat/{{b.id}}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i>Delete</a>
+                            <a href="/cats/{{b.id}}" class="btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                        </td>               
+                    </tr>
+                {%endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <div class="col-sm-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if cat %}
+                <input type="hidden" value="{{cat.id}}" name="id">
+            {% endif %}            
+            <div class="form-group">
+                <label>Category Name</label>
+                <input type="text" class="form-control" value="{{cat.catname}}" name="catname">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea rows="6" class="form-control" value="{{cat.description}}" name="descr">{{cat.description}}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Photo</label>
+                <input type="file" accept=".jpg,.png" class="form-control-file" name="pic">
+            </div>
+            
+            <input type="submit" class="btn btn-primary btn-sm" value="Save Category">
+        </form>
+        {% if messages %}                
+            <div class="alert text-success font-weight-bold text-center">    
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}                    
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

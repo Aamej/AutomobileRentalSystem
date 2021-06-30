@@ -1,0 +1,69 @@
+{% extends 'ncbase.html' %}
+{% block 'main' %}    
+    <div class="container-fluid products" style="margin-top:0;">
+    <div class="row">
+        <div class="col-sm-2 p-0">
+            <h5 class="p-2 text-center">Categories</h5>
+            <div class="list-group">
+                <a href="/products" class="list-group-item list-group-item-action {% if request.path == '/products/' %} active {% endif %}">All Categories</a>
+                {%for b in cats %}
+                <a href="/products/b/{{b.id}}" class="list-group-item list-group-item-action {% if b.id == cid %} active {% endif %}">{{b.catname}}</a>
+                {% endfor %}                
+            </div>
+
+            <h5 class="p-2 text-center">Size</h5>
+            <div class="list-group">
+                <a href="/products/s/m" class="list-group-item list-group-item-action{% if request.path == '/products/s/m' %} active {% endif %}">Mid Size (4-5 seats)</a>               
+                <a href="/products/s/f" class="list-group-item list-group-item-action{% if request.path == '/products/s/f' %} active {% endif %}">Full Size (7 seats)</a>               
+            </div>
+        </div>
+        <div class="col-sm-10 p-0">
+            <div class="card shadow">
+                <div class="card-body p-1">
+                    <div class="container-fluid py-2">
+                        <div class="col-md-12">
+                            <ul class="pages" style="margin-top:0">
+                                {% for i in paginator.page_range %}
+                                <li class="{% if i == page_obj.number %} active {% endif %}"><a href="?page={{i}}">{{i}}</a></li>
+                              {% endfor %}
+                            </ul>
+                          </div>                                                                       
+                        {% if msg %}
+                        <div class="alert alert-success text-center font-weight-bold">
+                            {{msg}}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row">                                        
+                            {% for c in page_obj %}                    
+                            <div class="col-md-4">
+                                <div class="card shadow mt-2">
+                                    <div class="card-header bg-success text-white font-weight-bold p-2">
+                                        <div class="form-row">
+                                            <div class="col-sm-3">{{c.fueltype}}</div>
+                                            <div class="col-sm-4 text-center">{{c.capacity}} seats</div>
+                                            <div class="col-sm-5 text-right">{{c.modelyear}} Model</div>
+                                        </div>                                 
+                                    </div>
+                                    <a href="/details/{{c.cid}}"><img style="height:200px;" src="{{c.photo.url}}" class="card-top-img img-thumbnail mx-auto d-block p-2"></a>
+                                    <div class="card-footer bg-dark text-white font-weight-bold p-2">
+                                        <div class="form-row">
+                                            <div class="col-sm-7">{{c.category.catname}}<br> {{c.title}}</div>
+                                            <div class="col-sm-5 text-right">&#8377; {{c.price}}/day</div>
+                                        </div>                                
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="clearfix"> </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>    
+
+<!-- //services -->
+</div>      
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block main  %}
+<h4 class="p-2" style="border-bottom: 2px solid green;">Admin Dashboard</h4>
+{% if messages %}                
+        <div class="alert text-success font-weight-bold text-center">    
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}                    
+        </div>
+{% endif %}
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card shadow m-2">
+            <div class="card-body">
+            <h4>Registered Users</h4>
+            <h5>{{totalusers}}</h5>
+        </div>
+        <div class="card-footer">
+            <a href="/users">View Details >></a>
+        </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card shadow m-2">
+            <div class="card-body">
+                <h4>Categories</h4>
+                <h5>{{totalbrands}}</h5>
+            </div>
+            <div class="card-footer">
+                <a href="/brands">View Details >></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card shadow m-2">
+            <div class="card-body">
+            <h4>Car Variants</h4>
+            <h5>{{totalcarvars}}</h5>
+            </div>
+            <div class="card-footer">
+                <a href="/variants">View Details >></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card shadow m-2">
+            <div class="card-body">
+            <h4>Cars</h4>
+            <h5>{{totalcars}}</h5>
+            </div>
+            <div class="card-footer">
+                <a href="/cars">View Details >></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card shadow m-2">
+            <div class="card-body">
+            <h4>Drivers</h4>
+            <h5>{{totaldrivers}}</h5>
+        </div>
+        <div class="card-footer">
+            <a href="/drivers">View Details >></a>
+        </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card shadow m-2">
+            <div class="card-body">
+            <h4>New Bookings</h4>
+            <h5>{{totalbookings}}</h5>
+            </div>
+            <div class="card-footer">
+                <a href="/bookings">View Details >></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

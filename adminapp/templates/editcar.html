@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block main  %}
+<h4 class="p-2">Edit Car Variant</h4>
+
+<form enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+    
+    <div class="card p-2 m-2 shadow">
+        <h5 class="p-2" style="border-bottom: 2px solid green;">Car Details</h5>
+    <div class="form-row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label>Car Name *</label>
+                <input type="text" name="title" value="{{car.title}}" required class="form-control">
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+            <label>Category *</label>
+            <select name="bid" required class="form-control">
+                <option value="">Select Category</option>
+                {% for b in cats %}
+                <option {% if car.category.id == b.id %} selected {% endif %} value="{{b.id}}">{{b.catname}}</option>
+                {% endfor %}
+            </select>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+            <label>Fuel Type</label>
+            <select name="fueltype" required class="form-control">
+                <option value="">Select Fuel Type</option>
+                {% for ft in fueltypes %}
+                <option {% if car.fueltype == ft %} selected {% endif %}>{{ft}}</option>
+                {% endfor %}
+            </select>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+            <label>Price per day</label>
+            <input type="text" name="price" value="{{car.price}}" class="form-control">
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label>Seat Capacity</label>
+                <input type="text" name="capacity" value="{{car.capacity}}" class="form-control">
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <div class="card p-2 m-2 shadow">
+        <h5 class="p-2" style="border-bottom: 2px solid green;">Upload Photos</h5>
+    <div class="form-row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label>Photo</label>
+                <input type="file" name="photo" id="photo" accept=".jpg,.png" class="form-control form-contorl-file">
+            </div>            
+        </div> 
+        <div class="col-sm-4">
+            <img src="{{car.photo.url}}" id="pic" class="img-thumbnail float-right" style="height:100px;">
+        </div>       
+    </div>
+</div>    
+    <div class="card p-2 m-2 shadow">
+        <h5 class="p-2" style="border-bottom: 2px solid green;">Car Features</h5>
+        <div class="row">
+        <div class="col-sm-3">            
+            <input type="checkbox" name="ac"{% if car.ac %} checked {% endif %} id="ac" class="form-control-check">
+            <label for="ac">Air Condition</label>
+        </div>
+        <div class="col-sm-3">            
+            <input type="checkbox" name="powerdoorlock"{% if car.powerdoorlock %} checked {% endif %} id="powerdoorlock" class="form-control-check">
+            <label for="powerdoorlock">Power Door Lock</label>
+        </div>
+        <div class="col-sm-3">            
+            <input type="checkbox" name="powersteering"{% if car.powersteering %} checked {% endif %} id="powersteering" class="form-control-check">
+            <label for="powersteering">Power Steering</label>
+        </div>
+        <div class="col-sm-3">            
+            <input type="checkbox" name="airbag" {% if car.airbag %} checked {% endif %}id="airbag" class="form-control-check">
+            <label for="airbag">Air Bags</label>
+        </div>
+        <div class="col-sm-3">            
+            <input type="checkbox" name="powerwindows" {% if car.powerwindows %} checked {% endif %}id="powerwindows" class="form-control-check">
+            <label for="powerwindows">Power Windows</label>
+        </div>
+        <div class="col-sm-3">            
+            <input type="checkbox" name="cdplayer" {% if car.cdplayer %} checked {% endif %}id="cdplayer" class="form-control-check">
+            <label for="cdplayer">CD Player</label>
+        </div>
+        <div class="col-sm-3">            
+            <input type="checkbox" name="centrallock"{% if car.centrallock %} checked {% endif %} id="centrallock" class="form-control-check">
+            <label for="centrallock">Central Lock</label>
+        </div>
+        <div class="col-sm-3">            
+            <input type="checkbox" name="gps"{% if car.gps %} checked {% endif %} id="gps" class="form-control-check">
+            <label for="gps">GPS Location</label>
+        </div>
+    </div>
+    </div>
+    <input type="submit" value="Save Car" class="m-2 px-3 btn btn-primary">
+</form>
+<script>
+    photo.onchange = evt => {
+      const [file] = photo.files
+      if (file) {
+        pic.src = URL.createObjectURL(file)
+      }
+    }
+</script>
+{% endblock %}

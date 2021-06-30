@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block main  %}
+<style>
+    a.btn-primary{
+        color:white !important;
+    }
+</style>
+<a href="/adddriver" class="btn btn-primary btn-sm float-right">Add New Driver</a>
+<h5 class="p-2" style="border-bottom: 2px solid green;">Available Drivers</h5>
+{% if messages %}                
+    <div class="alert text-success font-weight-bold text-center">    
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}                    
+    </div>
+{% endif %}
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>Driver ID</th>
+            <th>Driver Name</th>            
+            <th>Address</th>            
+            <th>Phone</th>                       
+            <th>Gender</th>            
+            <th>License No</th>             
+            <th>Experience</th>             
+            <th>Status</th>             
+            <th>Action</th>           
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in page_obj %}
+            <tr>
+                <td>{{c.id}}</td>
+                <td><img src="{{c.photo.url}}" style='width:80px;'> {{c.dname}}</td>                
+                <td>{{c.address}}</td>                
+                <td>{{c.phone}}</td>                               
+                <td>{{c.gender}}</td>                
+                <td>{{c.licno}}</td> 
+                <td>{{c.exp}} years</td> 
+                <td>{{c.status}}</td> 
+                <td><a href="/editdriver/{{c.id}}" class="btn btn-success btn-sm">Edit Details</a></td>               
+            </tr>
+        {%endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+       {% for i in paginator.page_range %}
+        <li class="page-item {% if i == page_obj.number %} active {% endif %}">
+            <a class="page-link" href="?page={{i}}">{{i}}</a>
+        </li>
+        {% endfor %}    
+    </ul>
+</nav>
+{% endblock %}
